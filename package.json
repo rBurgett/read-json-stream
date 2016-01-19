@@ -1,0 +1,25 @@
+{
+  "name": "read-json-stream",
+  "version": "1.0.0",
+  "description": "Node library for reading and parsing a JSON file as a stream.",
+  "main": "./dist/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rBurgett/read-json-stream.git"
+  },
+  "keywords": [
+    "json",
+    "fs",
+    "node",
+    "stream"
+  ],
+  "author": "rBurgett",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/rBurgett/read-json-stream/issues"
+  },
+  "homepage": "https://github.com/rBurgett/read-json-stream#readme"
+}
