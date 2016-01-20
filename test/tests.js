@@ -1,9 +1,10 @@
 /*global describe, it*/
 
 import should from 'should';
+import ReadJSONStream from '../src/read-json-stream';
 
-describe('something', () => {
-    it('should return true', () => {
-        true.should.be.true;
+describe('ReadJSONStream', () => {
+    it('should exist', () => {
+        ReadJSONStream.should.be.ok;
     });
 });
