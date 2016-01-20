@@ -18,7 +18,6 @@ describe('ReadJSONStream', function() {
         (() => ReadJSONStream)().should.throw();
     });
     it('should return an object', () => {
-        // console.log(ReadJSONStream(filePath));
         ReadJSONStream(filePath).should.be.an.Object();
     });
 
@@ -61,7 +60,7 @@ describe('ReadJSONStream', function() {
         });
         it('should pass any error out as the first parameter of the callback', (done) =>{
             ReadJSONStream('badpath')
-                .done((e) => {
+                .done(e => {
                     if(e) {
                         done();
                     }
