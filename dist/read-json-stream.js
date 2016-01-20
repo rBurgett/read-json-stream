@@ -24,6 +24,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var ReadJSONStream = function ReadJSONStream(origFilePath) {
 
+    var progressInterval = 100;
+
     if (!origFilePath) {
         throw new Error('You must pass in a file path string');
     }
@@ -47,7 +49,7 @@ var ReadJSONStream = function ReadJSONStream(origFilePath) {
             if (onProgress) {
                 var prog = (0, _progressStream2.default)({
                     length: stat.size,
-                    time: 100
+                    time: progressInterval
                 }).on('progress', function (p) {
                     onProgress(p.percentage.toFixed());
                 });
@@ -68,7 +70,12 @@ var ReadJSONStream = function ReadJSONStream(origFilePath) {
     };
 
     return {
-        progress: function progress(callback) {
+        progress: function progress(callback, interval) {
+
+            if (interval && typeof interval === 'number') {
+                progressInterval = interval;
+            }
+
             if (!callback) {
                 console.error('You must pass in a callback function to the progress method.');
             } else {

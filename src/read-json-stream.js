@@ -5,6 +5,8 @@ import progress from 'progress-stream';
 
 const ReadJSONStream = function(origFilePath) {
 
+    let progressInterval = 100;
+
     if(!origFilePath) {
         throw new Error('You must pass in a file path string');
     }
@@ -28,7 +30,7 @@ const ReadJSONStream = function(origFilePath) {
             if(onProgress) {
                 const prog = progress({
                     length: stat.size,
-                    time: 100
+                    time: progressInterval
                 }).on('progress', p => {
                     onProgress(p.percentage.toFixed());
                 });
@@ -52,7 +54,12 @@ const ReadJSONStream = function(origFilePath) {
     };
 
     return {
-        progress(callback) {
+        progress(callback, interval) {
+
+            if(interval && typeof interval === 'number') {
+                progressInterval = interval;
+            }
+
             if(!callback) {
                 console.error('You must pass in a callback function to the progress method.');
             } else {
