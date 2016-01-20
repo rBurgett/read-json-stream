@@ -1,16 +1,17 @@
 import fs from 'fs';
 import path from 'path';
 import oboe from 'oboe';
-import progress from 'progress';
+import progress from 'progress-stream';
 
-const ReadJSONStream = (origFilePath) => {
+const ReadJSONStream = function(origFilePath) {
 
-    if(!path) {
-        console.error('You must pass in a file path string.');
-        return;
+    if(!origFilePath) {
+        throw new Error('You must pass in a file path string');
     }
 
     const filePath = path.normalize(origFilePath);
+
+    let onProgress;
 
     const start = () => {
         return new Promise((resolve, reject) => {
@@ -22,59 +23,58 @@ const ReadJSONStream = (origFilePath) => {
                 reject(e);
             }
 
-            const prog = progress({
-                length: stat.size,
-                time: 100
-            }).on('progress', progress => {
-                if(this.onProgress) {
-                    this.onProgress(progress.percentage.toFixed());
-                }
-            });
+            let stream;
 
-            var stream = fs.createReadStream(filePath).pipe(prog);
+            if(onProgress) {
+                const prog = progress({
+                    length: stat.size,
+                    time: 100
+                }).on('progress', p => {
+                    onProgress(p.percentage.toFixed());
+                });
+
+                stream = fs.createReadStream(filePath).pipe(prog);
+            } else{
+                stream = fs.createReadStream(filePath);
+            }
 
             oboe(stream)
-                .on('done', function(d){
-                    setTimeout(function() {
+                .on('done', d => {
+                    setTimeout(() => {
                         resolve(d);
                     }, 0);
                 })
-                .on('fail', function(e){
+                .on('fail', e => {
                     reject(e);
                 });
 
         });
-
     };
 
-    this.progress = (callback) => {
-
-        if(!callback) {
-            console.error('You must pass in a callback function to the progress method.');
-        } else {
-            this.onProgress = callback;
-        }
-
-        return this;
-
-    };
-
-    this.done = (callback) => {
-
-        if(!callback) {
-            console.error('You must pass in a callback function to the done method.');
-            return;
-        }
-
-        start().then(
-            res => {
-                callback(null, res);
-            },
-            err => {
-                callback(err);
+    return {
+        progress(callback) {
+            if(!callback) {
+                console.error('You must pass in a callback function to the progress method.');
+            } else {
+                onProgress = callback;
             }
-        );
+            return this;
+        },
+        done(callback) {
+            if(!callback) {
+                console.error('You must pass in a callback function to the done method.');
+                return;
+            }
 
+            start().then(
+                res => {
+                    callback(null, res);
+                },
+                err => {
+                    callback(err);
+                }
+            );
+        }
     };
 
 };
