@@ -15,6 +15,10 @@ First, import/require the lib:
 ```
 import ReadJSONStream from 'read-json-stream';
 ```
+Or, if you are using older syntax:
+```
+var ReadJSONStream = require('read-json-stream').default;
+```
 Then load a JSON file.
 ```
 ReadJSONStream(filePath)  // filePath is a file path string e.g. 'data/myData.json' or 'path.join('data', 'myData.json');
